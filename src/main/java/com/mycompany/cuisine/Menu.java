@@ -39,19 +39,16 @@ public class Menu {
     }
 
     public void WriteMenu(){
-
         JSONObject obj = new JSONObject();
         
         JSONArray starters = new JSONArray();
         for (MealDTO meal : startersListM){
             starters.add(meal.toJson());
         }
-        
         JSONArray mainCourses = new JSONArray();
         for (MealDTO meal : coursesListM){
             mainCourses.add(meal.toJson());
         }
-        
         JSONArray desserts = new JSONArray();
         for (MealDTO meal : dessertsListM){
             desserts.add(meal.toJson());
@@ -69,8 +66,7 @@ public class Menu {
         } catch (IOException e) {
                 e.printStackTrace();
         }
-
-        System.out.print(obj.toJSONString());
+        System.out.print(obj.toJSONString() + "\n");
     }
     
 }

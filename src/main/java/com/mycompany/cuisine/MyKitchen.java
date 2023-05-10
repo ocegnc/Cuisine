@@ -7,6 +7,7 @@ package com.mycompany.cuisine;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -29,17 +30,15 @@ public class MyKitchen extends JFrame{
     private String title;
     private int cpt;
     private Menu menu;
-    private Order order;
     
-    public MyKitchen(){
+    public MyKitchen() throws ParseException{
         this("Ocean'sKitchen", 15);
     }
     
-    public MyKitchen(String title, int fontSize) {
+    public MyKitchen(String title, int fontSize) throws ParseException {
         super(title);
         cpt = 1;
         menu = new Menu();
-        order = new Order();
         this.title = title;
         this.fontSize = fontSize;
         this.setUpAndDisplay();
@@ -128,7 +127,7 @@ public class MyKitchen extends JFrame{
                 menu.getDessertsList().add(d);
             }
         });
-        
+      
         //Listener clearButton
         clearButton.addActionListener((e) -> {
             text1.reset();
@@ -142,56 +141,47 @@ public class MyKitchen extends JFrame{
         
         //Listener upgradeButton
         upgradeButton.addActionListener((e) -> {
-            System.out.println("Inventaire des pats du jour : ");
+            Order order = new Order();
             
-            try {
-                order.ReadOrder();
-            
+            System.out.println("Inventaire des plats : ");
             ArrayList<OrderDTO> startersList = order.getStartersList();
             for(OrderDTO startersDTO : startersList){
-                long qty = startersDTO.getQty();
+                int qty = startersDTO.getQty();
                 long id = startersDTO.getId();
-                //System.out.println("Commande n°" + order.getId() + " : \n");
                 for(MealDTO s : menu.getStartersList()){
-                    if (id==s.getId() && qty<=s.getQty()){
+                    if (id==s.getId() && qty<s.getQty()){
                         s.setQty((int) (s.getQty()-qty));
-                        System.out.println(s.getNom() + "Id : " + s.getId() + " --> Quantité : " + s.getQty());
-                    } else {
-                        System.out.println(s.getNom() + " : INDISPONIBLE");
-                    }
+                        System.out.println(s.getNom() + " --> Quantité restante : " + s.getQty());
+                    } else if (id==s.getId() && qty>=s.getQty()) {
+                        System.out.println(s.getNom() + " : RUPTURE DE STOCK");
+                    } 
                 }
             }
             ArrayList<OrderDTO> coursesList = order.getCoursesList();
             for(OrderDTO coursesDTO : coursesList){
-                long qty = coursesDTO.getQty();
-                long id = coursesDTO.getId();
+                int qty = coursesDTO.getQty();
+                int id = coursesDTO.getId();
                 for(MealDTO c : menu.getCoursesList()){
-                    if (id==c.getId() && qty<=c.getQty()){
+                    if (id==c.getId() && qty<c.getQty()){
                         c.setQty((int) (c.getQty()-qty));
-                        System.out.println(c.getNom() + "Id : " + c.getId() + " --> Quantité : " + c.getQty());
-                    } else {
-                        System.out.println(c.getNom() + " : INDISPONIBLE");
+                        System.out.println(c.getNom() + " --> Quantité restante: " + c.getQty());
+                    } else if (id==c.getId() && qty>=c.getQty()) {
+                        System.out.println(c.getNom() + " : RUPTURE DE STOCK");
                     }
                 }
             }
             ArrayList<OrderDTO> dessertsList = order.getDessertsList();
             for(OrderDTO dessertsDTO : dessertsList){
-                long qty = dessertsDTO.getQty();
-                long id = dessertsDTO.getId();
+                int qty = dessertsDTO.getQty();
+                int id = dessertsDTO.getId();
                 for(MealDTO d : menu.getDessertsList()){
-                    if (id==d.getId() && qty<=d.getQty()){
+                    if (id==d.getId() && qty<d.getQty()){
                         d.setQty((int) (d.getQty()-qty));
-                        System.out.println(d.getNom() + "Id : " + d.getId() + " --> Quantité : " + d.getQty());
-                    } else {
-                        System.out.println(d.getNom() + " : INDISPONIBLE");
+                        System.out.println(d.getNom() + " --> Quantité restante : " + d.getQty());
+                    }if (id==d.getId() && qty>=d.getQty()) {
+                        System.out.println(d.getNom() + " : RUPTURE DE STOCK");
                     }
                 }
-            }
-            
-            } catch (IOException ex) {
-                Logger.getLogger(MyKitchen.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ParseException ex) {
-                Logger.getLogger(MyKitchen.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         

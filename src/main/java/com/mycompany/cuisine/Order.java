@@ -4,6 +4,7 @@
  */
 package com.mycompany.cuisine;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -21,6 +22,7 @@ import org.json.simple.parser.ParseException;
  */
 public class Order {
     
+    private File filename;
     private String id;
     private ArrayList<OrderDTO> startersList;
     private ArrayList<OrderDTO> coursesList;
@@ -30,6 +32,10 @@ public class Order {
         startersList = new ArrayList<OrderDTO>();
         coursesList = new ArrayList<OrderDTO>();
         dessertsList = new ArrayList<OrderDTO>();
+        this.filename = new File("C:/Users/oce_g/NetBeans/Projets/Cuisine/order_10_58_53.json");
+        ReadStarters();
+        ReadCourses();
+        ReadDesserts();
     }
 
     public String getId() {
@@ -48,17 +54,11 @@ public class Order {
         return dessertsList;
     }
     
-    public void ReadOrder() throws FileNotFoundException, IOException, ParseException{
-        
+    private void ReadStarters() {
         JSONParser parser = new JSONParser();
-        /*Reader reader = new FileReader("restaurant_exemple_commande (1).json");
-
-        Object obj = parser.parse(reader);
-
-        JSONObject jsonObject = (JSONObject) obj; 
-        */
         try{
-        JSONObject jo = (JSONObject) parser.parse(new FileReader("order_11_30_19.json"));
+        JSONObject jo = (JSONObject) parser.parse(new FileReader(filename));
+        
         this.id = (String) jo.get("id");
         System.out.println("Commande n°" + id);
         
@@ -68,26 +68,42 @@ public class Order {
             startersList.add(startersDTO);
             System.out.println(startersDTO);
         }
-        
-        JSONArray mainCourses = (JSONArray) jo.get("mainCourses");
+        }catch (IOException e) {
+                e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    private void ReadCourses() {
+        JSONParser parser = new JSONParser();
+        try{
+        JSONObject jo = (JSONObject) parser.parse(new FileReader(filename));
+        JSONArray mainCourses = (JSONArray) jo.get("main_courses");
         for (Object obj1 : mainCourses){
             OrderDTO coursesDTO = new OrderDTO((JSONObject) obj1);
             coursesList.add(coursesDTO);
             System.out.println(coursesDTO);
         }
-        
+        }catch (IOException e) {
+                e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+    private void ReadDesserts() {
+        JSONParser parser = new JSONParser();
+        try{
+        JSONObject jo = (JSONObject) parser.parse(new FileReader(filename));
         JSONArray desserts = (JSONArray) jo.get("desserts");
         for (Object obj1 : desserts){
             OrderDTO dessertsDTO = new OrderDTO((JSONObject) obj1);
             dessertsList.add(dessertsDTO);
             System.out.println(dessertsDTO);
         }
-        
-       /* try {
-            reader.close();*/
-        } catch (IOException e) {
-                e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }catch (ParseException e) {
+            e.printStackTrace();
         }
-        
     }
 }

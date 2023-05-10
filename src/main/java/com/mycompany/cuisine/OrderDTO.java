@@ -11,27 +11,27 @@ import org.json.simple.JSONObject;
  * @author oce_g
  */
 public class OrderDTO {
-    private long id;
-    private long qty;
+    private int id;
+    private int qty;
 
     public OrderDTO(JSONObject jo) {
-        this.id = (long) jo.get(id);
-        this.qty = (long) jo.get(qty);
+        this.id = Integer.parseInt(jo.get("id").toString());
+        this.qty = Integer.parseInt(jo.get("qty").toString());
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public long getQty() {
+    public int getQty() {
         return qty;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public void setQty(long qty) {
+    public void setQty(int qty) {
         this.qty = qty;
     }
 
